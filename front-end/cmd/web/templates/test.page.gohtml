@@ -1,0 +1,39 @@
+{{template "base" .}}
+
+{{define "content" }}
+    <style>
+    .center {text-align: center;}
+    </style>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1 class="mt-5 center">Microservice Testing</h1>
+                <hr>
+
+                <div id="output" class="mt-5" style="outline: 1px solid silver; padding: 2em;">
+                    <span class="text-muted">Output</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <h4 class="mt-5">Message Sent</h4>
+                <div class="mt-1" style="outline: 1px solid silver; padding: 2em;">
+                    <pre id="payload"><span class="text-muted">Message Sent...</span></pre>
+                </div>
+            </div>
+            <div class="col">
+                <h4 class="mt-5">Message Received</h4>
+                <div class="mt-1" style="outline: 1px solid silver; padding: 2em;">
+                    <pre id="received"><span class="text-muted">Received Messaged...</span></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+{{end}}
+
+{{define "js"}}
+    <script>
+        
+    </script>
+{{end}}
