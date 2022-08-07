@@ -9,11 +9,11 @@ import (
 )
 
 func (app *Config) routes() http.Handler {
-	route := chi.NewRouter()
+	apps := chi.NewRouter()
 
-	route.Use(middleware.Logger)
+	apps.Use(middleware.Logger)
 
-	route.Use(cors.Handler(cors.Options{
+	apps.Use(cors.Handler(cors.Options{
 		// AllowedOrigins:   []string{"https://foo.com"}, // Use this to allow specific origin hosts
 		AllowedOrigins: []string{"https://*", "http://*"},
 		// AllowOriginFunc:  func(r *http.Request, origin string) bool { return true },
@@ -24,9 +24,8 @@ func (app *Config) routes() http.Handler {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 
-	route.Use(middleware.Heartbeat("/ping"))
-	return route
-	// route.Get("/", func(w http.ResponseWriter, r *http.Request) {
-	// 	w.Write([]byte("welcome"))
-	// })
+	apps.Use(middleware.Heartbeat("/ping"))
+	apps.Route("/v1", app.routers)
+
+	return apps
 }

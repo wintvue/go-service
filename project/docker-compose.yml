@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+
+  distributor-services:
+    build: 
+      context: ./../distributor-service
+      dockerfile: ./../distributor-service/distributor.dockerfile
+    restart: always
+    ports:
+      - "8080:80"
+    deploy:
+      mode: replicated
+      replicas: 1

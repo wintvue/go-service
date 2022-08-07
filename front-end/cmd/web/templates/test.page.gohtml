@@ -9,7 +9,7 @@
             <div class="col">
                 <h1 class="mt-5 center">Microservice Testing</h1>
                 <hr>
-
+                <a id="distriBtn" class= "btn" href="javascript:void(0);">distribute service button</a>
                 <div id="output" class="mt-5" style="outline: 1px solid silver; padding: 2em;">
                     <span class="text-muted">Output</span>
                 </div>
@@ -34,6 +34,29 @@
 
 {{define "js"}}
     <script>
-        
+        let distriBtn = document.getElementById("distriBtn");
+        let output = document.getElementById("output");
+        let sent = document.getElementById("payload");
+        let received = document.getElementById("received");
+
+        distriBtn.addEventListener("click", function() {
+            const body = {
+                method: 'POST',
+            }
+            fetch("http:\/\/localhost:8080/v1/", body)
+            .then((response) => response.json())
+            .then((data) => {
+                sent.innerHTML = "empty"
+                received.innerHTML = JSON.stringify(data, undefined, 4);   
+                if (data.error){
+                    console.log(data.message);
+                } else {
+                    output.innerHTML += `<br>Response from distrib service: ${data.message}`
+                }
+            })
+            .catch((error) => {
+                output.innerHTML += `<br><br>Error ${error}`
+            })
+        })
     </script>
 {{end}}
