@@ -6,5 +6,5 @@ import (
 
 func (app *Config) routers(router chi.Router) {
 	router.Post("/", app.distribute)
-
+	router.Post("/handler", app.Handle)
 }

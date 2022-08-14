@@ -8,6 +8,15 @@
 		},
 		{
 			"path": "project"
+		},
+		{
+			"path": "auth-service"
+		},
+		{
+			"path": "logger-service"
 		}
-	]
+	],
+	"settings": {
+		"makefile.extensionOutputFolder": "./.vscode"
+	}
 }
