@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"logger/data"
+	"net/http"
 	"os"
 	"time"
 
@@ -23,6 +25,7 @@ const gRpcPort = "50001"
 var client *mongo.Client
 
 type Config struct {
+	Models data.Models
 }
 
 func main() {
@@ -31,7 +34,6 @@ func main() {
 		log.Panic(err)
 	}
 	client = mongoClient
-
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 
@@ -41,14 +43,27 @@ func main() {
 		}
 	}()
 
+	app := Config{
+		Models: data.CreateModel(client),
+	}
+
+	app.serve()
+}
+
+func (app *Config) serve() {
+	srv := &http.Server{
+		Addr:    fmt.Sprintf(":%s", webPort),
+		Handler: app.routes(),
+	}
+
+	err := srv.ListenAndServe()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func connectToMongo() (*mongo.Client, error) {
 	clientOptions := options.Client().ApplyURI(mongoURL)
-	clientOptions.SetAuth(options.Credential{
-		Username: "admin",
-		Password: "password",
-	})
 
 	c, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
