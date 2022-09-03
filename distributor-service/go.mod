@@ -7,6 +7,4 @@ require (
 	github.com/go-chi/cors v1.2.1
 )
 
-require (
-	
-)
+require github.com/rabbitmq/amqp091-go v1.4.0 // indirect

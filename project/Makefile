@@ -3,6 +3,8 @@ FRONT_END_BINARY=frontApp.exe
 BROKER_BINARY=distributorApp
 AUTH_BINARY=authApp
 LOGGER_BINARY=loggerApp
+MAIL_BINARY=mailApp
+MQ_BINARY=mqApp
 
 ## up: starts all containers in the background without forcing build
 up:
@@ -11,7 +13,7 @@ up:
 	@echo Docker images started!
 
 ## up_build: stops docker-compose (if running), builds all projects and starts docker compose
-up_build: build_broker build_auth build_logger
+up_build: build_broker build_auth build_logger build_mail build_mq 
 	@echo Stopping docker images (if running...)
 	docker-compose down
 	@echo Building (when required) and starting docker images...
@@ -42,10 +44,21 @@ build_logger:
 	chdir ..\logger-service && set GOOS=linux&& set GOARCH=amd64&& set CGO_ENABLED=0 && go build -o ${LOGGER_BINARY} ./cmd/api
 	@echo Done!
 
+## build_mail: builds the broker binary as a linux executable
+build_mail:
+	@echo Building mail binary...
+	chdir ..\mail-service && set GOOS=linux&& set GOARCH=amd64&& set CGO_ENABLED=0 && go build -o ${MQ_BINARY} ./cmd/api
+	@echo Done!
+
 ## build_front: builds the frone end binary
 build_front:
 	@echo Building front end binary...
 	chdir ..\front-end && set CGO_ENABLED=0&& set GOOS=windows&& go build -o ${FRONT_END_BINARY} ./cmd/web
+	@echo Done!
+
+build_mq :
+	@echo Building mq binary...
+	chdir ..\mq-service && set GOOS=linux&& set GOARCH=amd64&& set CGO_ENABLED=0 && go build -o ${MQ_BINARY} ./cmd/api
 	@echo Done!
 
 ## start: starts the front end

@@ -40,7 +40,44 @@ services:
       USERNAME: "user22"
       PASSWORD: "mongo123"
 
-  
+  mail-service:
+    build: 
+        context: ./../mail-service
+        dockerfile: ./../mail-service/mail.dockerfile
+    restart: always
+    ports:
+      - "8083:80"
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      MAIL_DOMAIN: localhost
+      MAIL_HOST: mailhog
+      MAIL_PORT: 1025 
+      MAIL_ENCRYPTION: none
+      MAIL_USERNAME: ""
+      MAIL_PASSWORD: ""
+      FROM_NAME: "sender"
+      FROM_ADDRESS: "receiver@mail.com" 
+
+  mq-service:
+    build: 
+      context: ./../mq-service
+      dockerfile: ./../mq-service/mq-service.dockerfile
+    restart: always
+    ports:
+      - "8084:80"
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    restart: always
+    ports:
+      - 1025:1025
+      - 8025:8025
+
   postgres:
     image: 'postgres:14.2'
     ports:
@@ -55,17 +92,12 @@ services:
     volumes:
       - ./db-data/postgres/:/var/lib/postgresql/data/
 
-  # mongo:
-  #   image: 'mongo:4.2.16-bionic'
-  #   ports:
-  #     - "27017:27017"
-  #   environment:
-  #     MONGO_INITDB_DATABASE: logs
-  #     MONGO_INITDB_ROOT_USERNAME: admin
-  #     MONGO_INITDB_ROOT_PASSWORD: password
-  #   volumes:
-  #     - ./db-data/mongo/:/data/db
-
-
-
-  
+  rabbitmq:
+    image: 'rabbitmq:3.9-alpine'
+    ports:
+      - "5672:5672"
+    deploy:
+      mode: replicated
+      replicas: 1
+    volumes:
+      - ./db-data/rabbitmq/:/var/lib/rabbitmq/
